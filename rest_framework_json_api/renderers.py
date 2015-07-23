@@ -69,7 +69,8 @@ class JSONRenderer(renderers.JSONRenderer):
                 json_api_data.append(
                     utils.build_root(fields, resource, resource_name))
         else:
-            fields = data.serializer.fields
+            resource_serializer = data.serializer
+            fields = resource_serializer.fields
             json_api_data = utils.build_root(fields, data, resource_name)
 
         render_data = {
@@ -78,7 +79,17 @@ class JSONRenderer(renderers.JSONRenderer):
 
         if data.get('meta'):
             render_data['meta'] = data.get('meta')
+        # call hook that allows additional meta to be set from the serializer
+        try:
+            meta_override = resource_serializer.add_meta(data.get('meta', {}))
+            if meta_override:
+                render_data.update({
+                    'meta': meta_override
+                })
+        except AttributeError:
+            pass
 
+        # add links created by serializer hyperlink fields
         if data.get('links'):
             render_data['links'] = data.get('links')
 

@@ -146,6 +146,9 @@ class ModelViewSetTests(TestBase):
                     u'last-name': self.miles.last_name,
                     u'email': self.miles.email
                 },
+            },
+            u'meta': {
+                u'copyright': u'2015'
             }
         }
         self.assertEqual(result, expected)
