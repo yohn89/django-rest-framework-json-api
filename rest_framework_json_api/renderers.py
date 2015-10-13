@@ -82,6 +82,7 @@ class JSONRenderer(renderers.JSONRenderer):
             included_resources = list()
 
         json_api_included = list()
+        included_fields = request.GET.get('include', '').split(',')
 
         if data and 'results' in data:
             serializer_data = data["results"]
@@ -107,7 +108,7 @@ class JSONRenderer(renderers.JSONRenderer):
                 resource_instance = resource_serializer.instance[position]  # Get current instance
                 json_api_data.append(
                     utils.build_json_resource_obj(fields, resource, resource_instance, resource_name))
-                included = utils.extract_included(fields, resource, resource_instance, included_resources)
+                included = utils.extract_included(included_fields, fields, resource, resource_instance, included_resources)
                 if included:
                     json_api_included.extend(included)
         else:
@@ -116,7 +117,7 @@ class JSONRenderer(renderers.JSONRenderer):
                 fields = utils.get_serializer_fields(data.serializer)
                 resource_instance = data.serializer.instance
                 json_api_data = utils.build_json_resource_obj(fields, data, resource_instance, resource_name)
-                included = utils.extract_included(fields, data, resource_instance, included_resources)
+                included = utils.extract_included(included_fields ,fields, data, resource_instance, included_resources)
                 if included:
                     json_api_included.extend(included)
             else:

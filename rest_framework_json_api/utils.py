@@ -397,7 +397,7 @@ def extract_relationships(fields, resource, resource_instance):
     return format_keys(data)
 
 
-def extract_included(fields, resource, resource_instance, included_resources):
+def extract_included(include_fields, fields, resource, resource_instance, included_resources):
     included_data = list()
 
     current_serializer = fields.serializer
@@ -405,6 +405,10 @@ def extract_included(fields, resource, resource_instance, included_resources):
     included_serializers = get_included_serializers(current_serializer)
 
     for field_name, field in six.iteritems(fields):
+        if include_fields and not field_name in include_fields:
+            print 'include', include_fields, field_name
+            continue
+
         # Skip URL field
         if field_name == api_settings.URL_FIELD_NAME:
             continue
@@ -459,7 +463,7 @@ def extract_included(fields, resource, resource_instance, included_resources):
                     )
                     included_data.extend(
                         extract_included(
-                            serializer_fields, serializer_resource, nested_resource_instance, new_included_resources
+                            include_fields, serializer_fields, serializer_resource, nested_resource_instance, new_included_resources
                         )
                     )
 
@@ -476,7 +480,7 @@ def extract_included(fields, resource, resource_instance, included_resources):
                 )
                 included_data.extend(
                     extract_included(
-                        serializer_fields, serializer_data, relation_instance_or_manager, new_included_resources
+                        include_fields, serializer_fields, serializer_data, relation_instance_or_manager, new_included_resources
                     )
                 )
 
