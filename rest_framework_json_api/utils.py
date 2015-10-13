@@ -398,8 +398,6 @@ def extract_relationships(fields, resource, resource_instance):
 
 
 def extract_included(fields, resource, resource_instance, included_resources):
-    a = b
-    print 'patched extract_included...............'
     included_data = list()
 
     current_serializer = fields.serializer
