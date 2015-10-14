@@ -406,7 +406,6 @@ def extract_included(include_fields, fields, resource, resource_instance, includ
 
     for field_name, field in six.iteritems(fields):
         if include_fields and not field_name in include_fields:
-            print 'include', include_fields, field_name
             continue
 
         # Skip URL field
