@@ -130,6 +130,10 @@ def format_value(value, format_type=None):
         value = inflection.camelize(value)
     elif format_type == 'underscore':
         value = inflection.underscore(value)
+    elif format_type == 'lowercase':
+        value = inflection.underscore(value)
+        value = inflection.dasherize(value)
+        value = value.replace('-', '')
     return value
 
 
